@@ -33,7 +33,7 @@ defineEmits(['update:hatimName', 'update:startDate', 'update:endDate']);
 .info-form {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 12px;
+  gap: 16px;
   align-items: end;
 }
 @media (max-width: 700px) {
@@ -45,47 +45,29 @@ defineEmits(['update:hatimName', 'update:startDate', 'update:endDate']);
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .form-label {
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--t-muted);
   text-transform: uppercase;
-  letter-spacing: 0.07em;
-}
-
-.form-input {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  padding: 10px 14px;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.add-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: var(--shadow);
+  letter-spacing: 0.05em;
+  margin-left: 4px;
 }
 
 .card-header {
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-left: -24px;
+  margin-right: -24px;
+  padding-left: 24px;
 }
+
 .card-title {
-  font-size: 15px;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text);
 }

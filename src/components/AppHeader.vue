@@ -1,5 +1,5 @@
 <template>
-  <header class="app-header">
+  <header class="app-header glass">
     <div class="header-top">
       <div class="logo">📖</div>
       <div>

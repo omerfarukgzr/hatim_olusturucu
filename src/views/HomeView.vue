@@ -6,6 +6,10 @@
         <div class="app-title">Hatim Takip Paneli</div>
         <div class="app-subtitle">Tüm Hatim Organizasyonlarınızı Yönetin</div>
       </div>
+      <div v-if="user" class="user-info">
+        <span class="user-email">👤 {{ user.email }}</span>
+        <button class="btn btn-ghost" @click="handleLogout">Çıkış Yap 🚪</button>
+      </div>
     </div>
   </div>
 
@@ -85,15 +89,22 @@
 <script setup>
 import { ref, nextTick, onMounted } from 'vue';
 import { useHatim } from '../composables/useHatim';
+import { useAuth } from '../composables/useAuth';
 import { useRouter } from 'vue-router';
 import BaseModal from '../components/BaseModal.vue';
 
 const { hatims, createHatim, deleteHatim, loadAll } = useHatim();
+const { user, signOut } = useAuth();
 const router = useRouter();
 
 onMounted(() => {
   loadAll();
 });
+
+async function handleLogout() {
+  await signOut();
+  router.push('/login');
+}
 
 // Create Modal State
 const createModalOpen = ref(false);
@@ -154,4 +165,23 @@ function formatDate(d) {
   padding: 10px; border-radius: var(--radius-sm); color: var(--text); outline: none; width: 100%;
 }
 .field-input:focus { border-color: var(--accent); }
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.user-email {
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
 </style>

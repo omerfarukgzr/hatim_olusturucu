@@ -23,9 +23,13 @@ export function useHatim() {
     // ── STORAGE (Supabase) ──
     async function loadAll() {
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) return;
+
             const { data, error } = await supabase
                 .from('hatims')
                 .select('*')
+                .eq('user_id', user.id)
                 .order('created', { ascending: false });
 
             if (error) throw error;
@@ -53,15 +57,19 @@ export function useHatim() {
 
     // ── CRUD (Supabase) ──
     async function createHatim(name) {
-        const newHatim = {
-            name: name || 'Yeni Hatim',
-            startDate: '',
-            endDate: '',
-            participants: [],
-            created: new Date().toISOString()
-        };
-
         try {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) throw new Error('Oturum açmanız gerekiyor.');
+
+            const newHatim = {
+                name: name || 'Yeni Hatim',
+                startDate: '',
+                endDate: '',
+                participants: [],
+                created: new Date().toISOString(),
+                user_id: user.id
+            };
+
             const { data, error } = await supabase
                 .from('hatims')
                 .insert([newHatim])

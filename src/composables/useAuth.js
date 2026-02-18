@@ -1,37 +1,27 @@
 import { ref } from 'vue';
-import { supabase } from '../supabase';
+import { authService } from '../services/authService';
 
 const user = ref(null);
 
 export function useAuth() {
 
     async function signUp(email, password) {
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password
-        });
-        if (error) throw error;
-        return data;
+        return await authService.signUp(email, password);
     }
 
     async function signIn(email, password) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
-        if (error) throw error;
+        const data = await authService.signIn(email, password);
         user.value = data.user;
         return data;
     }
 
     async function signOut() {
-        const { error } = await supabase.auth.signOut();
-        if (error) throw error;
+        await authService.signOut();
         user.value = null;
     }
 
     async function checkUser() {
-        const { data: { user: _user } } = await supabase.auth.getUser();
+        const _user = await authService.getCurrentUser();
         user.value = _user;
         return _user;
     }
@@ -41,7 +31,6 @@ export function useAuth() {
         signUp,
         signIn,
         signOut,
-        checkUser,
-        supabase // export for other uses if needed
+        checkUser
     };
 }

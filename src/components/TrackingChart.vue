@@ -12,7 +12,16 @@
       >
         <div class="card-top">
           <div class="p-info">
-            <span class="p-name">{{ p.fullName }}</span>
+            <div class="p-name-row">
+              <span class="p-name">{{ p.fullName }}</span>
+              <div v-if="isBehindSchedule(p)" class="behind-warning" title="Okuma programının gerisinde!">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="warning-icon">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
+            </div>
             <span class="p-stats">{{ p.pages }} Sayfa / Gün</span>
           </div>
           <div class="p-progress">
@@ -78,8 +87,33 @@ const sortedParticipants = computed(() => {
   return [...props.participants].sort((a, b) => b.pages - a.pages);
 });
 
+const currentDayIndex = computed(() => {
+  if (!props.startDate) return -1;
+  const start = new Date(props.startDate);
+  const now = new Date();
+  
+  // Set times to midnight to calculate day difference correctly
+  const startDate = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+  const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
+  const diffTime = todayDate - startDate;
+  return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+});
+
 function isDayChecked(participant, dayIdx) {
   return participant.checkedDays && participant.checkedDays.includes(dayIdx);
+}
+
+function isBehindSchedule(participant) {
+  if (currentDayIndex.value <= 0) return false;
+  
+  // Participant is behind if any day before today is not checked
+  // Only check up to the total days available
+  const daysToCheck = Math.min(currentDayIndex.value, totalDays.value);
+  for (let i = 0; i < daysToCheck; i++) {
+    if (!isDayChecked(participant, i)) return true;
+  }
+  return false;
 }
 
 function getCheckedCount(participant) {
@@ -155,12 +189,36 @@ function goToParticipantPage(fullName) {
   margin-bottom: 16px;
 }
 
+.p-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
 .p-name {
   display: block;
   font-weight: 700;
   font-size: 16px;
   color: var(--text);
-  margin-bottom: 2px;
+}
+
+.behind-warning {
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  animation: pulse-red 2s infinite;
+}
+
+.warning-icon {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes pulse-red {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .p-stats {

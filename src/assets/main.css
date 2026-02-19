@@ -29,6 +29,31 @@
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
 
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --header-bg: rgba(255, 255, 255, 0.7);
+}
+
+:root.dark {
+    --bg: #121212;
+    --bg-alt: #1a1a1a;
+    --surface: #1e1e1e;
+    --surface-alt: #2c2c2c;
+    --border: #333333;
+    --border-soft: #2a2a2a;
+
+    --accent: #7a9c6e;
+    --accent-soft: #2d3829;
+    --accent-hover: #8ab07d;
+
+    --text: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --text-dim: #666666;
+
+    --header-bg: rgba(30, 30, 30, 0.8);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.8);
 }
 
 *,
@@ -42,9 +67,9 @@
 body {
     font-family: 'Outfit', 'Inter', sans-serif;
     background-color: var(--bg);
-    background-image: radial-gradient(at 0% 0%, #f1f3ee 0, transparent 50%),
-        radial-gradient(at 50% 0%, #fdfdfb 0, transparent 50%),
-        radial-gradient(at 100% 0%, #f1f3ee 0, transparent 50%);
+    background-image: radial-gradient(at 0% 0%, var(--bg-alt) 0, transparent 50%),
+        radial-gradient(at 50% 0%, var(--bg) 0, transparent 50%),
+        radial-gradient(at 100% 0%, var(--bg-alt) 0, transparent 50%);
     color: var(--text);
     min-height: 100vh;
     padding-bottom: 80px;
@@ -53,7 +78,7 @@ body {
 
 /* ── HEADER ── */
 .app-header {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--header-bg);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-soft);
     padding: 32px 24px;
@@ -265,14 +290,30 @@ body {
 }
 
 .btn-danger {
-    background: #fff;
+    background: var(--surface);
     color: var(--red);
-    border: 1px solid #fcebeb;
+    border: 1px solid var(--red);
+    /* dimmed border for visibility */
+    opacity: 0.9;
 }
 
 .btn-danger:hover {
-    background: #fff5f5;
+    background: var(--surface-alt);
     border-color: var(--red);
+    opacity: 1;
+    box-shadow: 0 4px 12px rgba(192, 93, 93, 0.2);
+}
+
+.btn-outline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+}
+
+.btn-outline:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+    border-color: var(--accent);
 }
 
 .btn-ghost {
@@ -333,7 +374,7 @@ table {
 }
 
 thead th {
-    background: #fff;
+    background: var(--surface);
     color: var(--accent);
     font-size: 12px;
     font-weight: 700;

@@ -36,7 +36,7 @@ defineEmits(['export', 'exportPdf']);
 
 <style scoped>
 .footer-card {
-  background: rgba(255, 255, 255, 0.85);
+  background: var(--header-bg);
   border-top: 1px solid var(--border-soft);
   padding: 24px 32px;
   display: flex;
@@ -81,17 +81,6 @@ defineEmits(['export', 'exportPdf']);
   gap: 16px;
 }
 
-.btn-outline { 
-  background: #fff; 
-  border: 1px solid var(--border); 
-  color: var(--text-muted); 
-}
-
-.btn-outline:hover { 
-  background: var(--bg-alt); 
-  color: var(--text); 
-  border-color: var(--accent); 
-}
 
 @media (max-width: 600px) {
   .footer-card { flex-direction: column; gap: 20px; align-items: stretch; padding: 20px; border-radius: 0; }

@@ -16,7 +16,7 @@
       </div>
       <div class="form-group pages-group">
         <label class="form-label" for="addPages">Sayfa Sayısı</label>
-        <input class="form-input" id="addPages" type="number" min="1" max="604" placeholder="20" v-model.number="pages" @keydown.enter="submit" />
+        <input class="form-input" id="addPages" type="number" min="1" :max="MAX_PAGES" placeholder="20" v-model.number="pages" @keydown.enter="submit" />
       </div>
       
       <button class="btn btn-primary action-btn" id="addBtn" @click="submit">
@@ -63,6 +63,7 @@
 import { ref, computed } from 'vue';
 import { useToast } from '../composables/useToast';
 import ExcelJS from 'exceljs';
+import { MAX_PAGES } from '../constants';
 
 const props = defineProps({
   remainingPages: Number,
@@ -253,17 +254,6 @@ async function downloadTemplate() {
   align-items: center;
 }
 
-.btn-outline { 
-  background: #fff; 
-  border: 1px solid var(--border); 
-  color: var(--text-muted); 
-}
-
-.btn-outline:hover { 
-  background: var(--bg-alt); 
-  color: var(--text); 
-  border-color: var(--accent); 
-}
 
 .counter-badge {
     background: var(--accent-soft);

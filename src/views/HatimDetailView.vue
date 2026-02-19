@@ -1,8 +1,18 @@
 <template>
   <div v-if="hatim">
     <div class="nav-bar">
-      <button class="btn btn-ghost" @click="$router.push('/')">⬅️ Hatim Listesine Dön</button>
-      <UserMenu />
+      <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" @click="$router.push('/')">
+        <div class="logo">
+          <img src="../assets/logo.png" alt="Hatim Takip Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
+        </div>
+        <h1 class="nav-title">Hatim Takip</h1>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <ThemeToggle />
+        <button class="btn btn-ghost" @click="$router.push('/')">⬅️ Listeye Dön</button>
+        <UserMenu />
+      </div>
     </div>
 
     <main class="main">
@@ -11,6 +21,23 @@
         v-model:startDate="hatim.startDate"
         v-model:endDate="hatim.endDate"
       />
+
+      <div class="info-card">
+        <div class="info-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </div>
+        <div class="info-content">
+          <h3 class="info-title">Hatırlatma: 600 Sayfa Dağıtımı</h3>
+          <p class="info-text">
+            Hatim dağıtımı <strong>600 sayfa</strong> üzerinden yapılmektedir. Son 4 sayfa kısa süreler olduğu için dağıtıma dahil edilmemiştir. 
+            <strong>600. sayfaya denk gelen kişinin son 4 sayfayı da okuması gerekmektedir.</strong>
+          </p>
+        </div>
+      </div>
 
       <AddParticipantForm
         :remainingPages="remaining"
@@ -65,6 +92,7 @@ import ParticipantList from '../components/ParticipantList.vue';
 import AppFooter from '../components/AppFooter.vue';
 import BaseModal from '../components/BaseModal.vue';
 import UserMenu from '../components/UserMenu.vue';
+import ThemeToggle from '../components/ThemeToggle.vue';
 
 const route = useRoute();
 const { hatims, calculateStats, getPersonStartPage, exportExcel, exportPdf, MAX_PAGES, updateHatim, loadHatim } = useHatim();
@@ -103,7 +131,7 @@ async function triggerSave() {
 }
 
 const stats = computed(() => {
-  if (!hatim.value) return { total: 0, remaining: 604, percentage: 0 };
+  if (!hatim.value) return { total: 0, remaining: MAX_PAGES, percentage: 0 };
   return calculateStats(hatim.value.participants);
 });
 
@@ -230,7 +258,7 @@ watch(() => hatim.value?.endDate, triggerSave);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-soft);
   padding: 16px 24px;
@@ -238,6 +266,23 @@ watch(() => hatim.value?.endDate, triggerSave);
   top: 0;
   z-index: 101;
 }
+
+.nav-bar .logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-bar .nav-title {
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+
 .not-found {
   padding: 100px 24px;
   text-align: center;
@@ -250,5 +295,61 @@ watch(() => hatim.value?.endDate, triggerSave);
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer;
+}
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  align-items: flex-start;
+  transition: var(--transition);
+}
+
+.info-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+.info-icon {
+  color: var(--accent);
+  background: var(--accent-soft);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-title {
+  font-family: 'Lora', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 6px;
+  margin-top: 0;
+}
+
+.info-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.info-text strong {
+  color: var(--text);
+  font-weight: 600;
 }
 </style>

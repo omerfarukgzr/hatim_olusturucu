@@ -41,6 +41,12 @@ export const exportService = {
             ws.addRow(row);
         });
 
+        // Add footer note
+        ws.addRow(['']);
+        const noteRow = ws.addRow(['NOT: 600. sayfaya gelenlerin son 4 sayfayı da okuması gerekmektedir.']);
+        ws.mergeCells(`A${noteRow.number}:C${noteRow.number}`);
+        noteRow.font = { bold: true, color: { argb: 'FF0000' } };
+
         // Styling (simplified for brevity, keep existing logic if needed)
         ws.eachRow(row => {
             row.eachCell(cell => {
@@ -100,9 +106,10 @@ export const exportService = {
             content: [
                 { text: hatim.name, fontSize: 14, bold: true, alignment: 'center', margin: [0, 0, 0, 10] },
                 {
-                    table: { headerRows: 2, body },
+                    table: { headerRows: 2, body: body },
                     layout: 'lightHorizontalLines'
-                }
+                },
+                { text: 'NOT: 600. sayfaya gelenlerin son 4 sayfayı da okuması gerekmektedir.', fontSize: 10, bold: true, color: 'red', margin: [0, 10, 0, 0] }
             ],
             defaultStyle: { font: 'Roboto', fontSize: 7 }
         };

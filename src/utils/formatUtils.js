@@ -35,7 +35,7 @@ export const hatimUtils = {
         for (let i = 0; i < index; i++) {
             start += (participants[i].pages || 0);
         }
-        // Wrap around logic for 604 pages
+        // Wrap around logic for MAX_PAGES pages
         return ((start - 1) % MAX_PAGES) + 1;
     },
 

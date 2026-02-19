@@ -1,5 +1,8 @@
 <template>
   <div class="login-container">
+    <div class="top-right-toggle">
+      <ThemeToggle />
+    </div>
     <div class="login-card">
       <div class="logo">
         <img src="../assets/logo.png" alt="Hatim Takip Logo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px;" />
@@ -36,8 +39,9 @@
       </form>
 
       <div class="toggle-text">
-        <span v-if="!isSignUp">Hesabınız yok mu? <a @click="isSignUp = true">Kayıt Ol</a></span>
-        <span v-else>Zaten hesabınız var mı? <a @click="isSignUp = false">Giriş Yap</a></span>
+        <!-- <span v-if="!isSignUp">Hesabınız yok mu? <a @click="isSignUp = true">Kayıt Ol</a></span>
+        <span v-else>Zaten hesabınız var mı? <a @click="isSignUp = false">Giriş Yap</a></span> -->
+        <span v-if="!isSignUp">Misafir olarak devam etmek için <a @click="$router.push('/')">tıklayın</a></span>
       </div>
     </div>
   </div>
@@ -48,6 +52,7 @@ import { ref } from 'vue';
 import { useAuth } from '../composables/useAuth';
 import { useRouter } from 'vue-router';
 import { useToast } from '../composables/useToast';
+import ThemeToggle from '../components/ThemeToggle.vue';
 
 const { signIn, signUp } = useAuth();
 const router = useRouter();
@@ -85,6 +90,12 @@ async function handleSubmit() {
   align-items: center;
   min-height: 100vh;
   padding: 24px;
+  position: relative;
+}
+.top-right-toggle {
+    position: absolute;
+    top: 24px;
+    right: 24px;
 }
 .login-card {
   background: var(--surface);

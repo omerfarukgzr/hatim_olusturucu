@@ -37,7 +37,7 @@
               <span v-else>{{ p.fullName }}</span>
             </td>
             <td class="td-pages">
-              <input v-if="editingId === p.id" v-model.number="editPages" class="inline-edit" type="number" min="1" max="604" />
+              <input v-if="editingId === p.id" v-model.number="editPages" class="inline-edit" type="number" min="1" :max="MAX_PAGES" />
               <span v-else>{{ p.pages }}</span>
             </td>
             <td class="td-range">Sf. {{ getStartPage(index) }}</td>
@@ -65,6 +65,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { MAX_PAGES } from '../constants';
 
 const props = defineProps({
   participants: Array,
@@ -194,9 +195,17 @@ function save(index) {
 .inline-edit {
   width: 100%;
   padding: 4px 8px;
+  background: var(--surface-alt);
+  color: var(--text);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   font-family: inherit;
   font-size: inherit;
+  outline: none;
+}
+
+.inline-edit:focus {
+  border-color: var(--accent);
+  background: var(--surface);
 }
 </style>

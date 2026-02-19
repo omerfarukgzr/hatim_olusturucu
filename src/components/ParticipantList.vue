@@ -55,9 +55,8 @@
         </tbody>
       </table>
       <div v-else class="empty-state">
-        <div class="empty-icon">📋</div>
-        <div class="empty-text">Henüz katılımcı eklenmedi</div>
-        <div class="empty-sub">Yukarıdaki formu kullanarak kişi ekleyin</div>
+        <h3 class="empty-title">Henüz Katılımcı Yok</h3>
+        <p class="empty-desc">Listeniz şu an boş. Yukarıdaki formu kullanarak<br>yeni katılımcılar ekleyebilirsiniz.</p>
       </div>
     </div>
   </div>
@@ -207,5 +206,30 @@ function save(index) {
 .inline-edit:focus {
   border-color: var(--accent);
   background: var(--surface);
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.empty-title {
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.empty-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.6;
 }
 </style>

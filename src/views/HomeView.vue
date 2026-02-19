@@ -103,9 +103,8 @@
           </tbody>
         </table>
         <div v-else class="empty-state">
-          <div class="empty-icon">📂</div>
-          <div class="empty-text">Henüz hatim oluşturulmadı</div>
-          <div class="empty-sub">Yeni bir hatim oluşturarak başlayın</div>
+          <h3 class="empty-title">Henüz Hatim Oluşturulmadı</h3>
+          <p class="empty-desc">Yeni bir hatim oluşturarak başlayın</p>
         </div>
       </div>
     </div>
@@ -286,6 +285,31 @@ function formatDate(d) {
   font-size: 14px;
   color: var(--text-muted);
   line-height: 1.5;
+}
+
+/* ── EMPTY STATE ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.empty-title {
+  font-family: 'Lora', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.empty-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.6;
 }
 
 @media (max-width: 768px) {

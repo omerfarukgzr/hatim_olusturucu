@@ -115,5 +115,78 @@ export const exportService = {
         };
 
         pdfMake.createPdf(docDefinition).download(`${hatim.name.replace(/\s+/g, '_')}.pdf`);
+    },
+
+    personalPdf(hatim, participant, index) {
+        if (!hatim || !participant) throw new Error('Veri eksik.');
+        const dates = dateUtils.getDatesInRange(hatim.startDate, hatim.endDate);
+
+        const body = [
+            [
+                { text: 'GÜN / TARİH', fillColor: '#f3f4f6', alignment: 'center', bold: true },
+                { text: 'OKUNACAK SAYFALAR', fillColor: '#f3f4f6', alignment: 'center', bold: true }
+            ]
+        ];
+
+        let has600 = false;
+        dates.forEach((date, dIdx) => {
+            const { start, end } = hatimUtils.getDayRange(hatim.participants, index, dIdx);
+            if (start === 600 || end === 600) has600 = true;
+
+            body.push([
+                {
+                    stack: [
+                        { text: dateUtils.formatDayName(date), fontSize: 10, bold: true },
+                        { text: dateUtils.formatToLocale(date), fontSize: 8, color: '#6b7280' }
+                    ],
+                    margin: [0, 5, 0, 5]
+                },
+                {
+                    text: `${start} - ${end}`,
+                    alignment: 'center',
+                    fontSize: 14,
+                    bold: true,
+                    color: '#2d5a27',
+                    margin: [0, 8, 0, 0]
+                }
+            ]);
+        });
+
+        const docDefinition = {
+            pageSize: 'A4',
+            pageMargins: [40, 40, 40, 40],
+            content: [
+                { text: 'KİŞİSEL HATİM ÇİZELGESİ', fontSize: 10, color: '#2d5a27', bold: true, alignment: 'center' },
+                { text: participant.fullName, fontSize: 24, bold: true, alignment: 'center', margin: [0, 5, 0, 2] },
+                { text: hatim.name, fontSize: 14, alignment: 'center', color: '#6b7280', margin: [0, 0, 0, 20] },
+
+                {
+                    table: {
+                        headerRows: 1,
+                        widths: ['*', '*'],
+                        body: body
+                    },
+                    layout: {
+                        hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 2 : 1,
+                        vLineWidth: () => 0,
+                        hLineColor: (i) => (i === 0 || i === 1) ? '#2d5a27' : '#e5e7eb',
+                        paddingTop: () => 8,
+                        paddingBottom: () => 8
+                    }
+                },
+
+                has600 ? {
+                    text: 'NOT: 600. sayfaya geldiğiniz için hatim sonundaki 4 sayfayı (kısa sureler) da okumanız gerekmektedir.',
+                    fontSize: 10,
+                    bold: true,
+                    color: 'red',
+                    margin: [0, 20, 0, 0],
+                    alignment: 'center'
+                } : null
+            ],
+            defaultStyle: { font: 'Roboto' }
+        };
+
+        pdfMake.createPdf(docDefinition).download(`${participant.fullName.replace(/\s+/g, '_')}_Hatim.pdf`);
     }
 };

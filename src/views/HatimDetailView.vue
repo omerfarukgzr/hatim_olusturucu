@@ -9,8 +9,8 @@
       </div>
       
       <div style="display: flex; align-items: center; gap: 12px;">
-        <ThemeToggle />
         <button class="btn btn-ghost" @click="$router.push('/')">⬅️ Listeye Dön</button>
+        <ThemeToggle />
         <UserMenu />
       </div>
     </div>
@@ -61,6 +61,7 @@
         :remaining="remaining"
         @export="handleExport"
         @exportPdf="handleExportPdf"
+        @copyLink="handleCopyLink"
       />
     </main>
 
@@ -245,6 +246,13 @@ function handleExportPdf() {
   } catch (e) {
     show(e.message, 'error');
   }
+}
+
+function handleCopyLink() {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // Remove trailing slash if exists
+  const url = `${window.location.origin}${base}/takip/${hatim.value.id}`;
+  navigator.clipboard.writeText(url);
+  show('Takip linki kopyalandı! Bu linki katılımcılara gönderebilirsiniz.', 'success');
 }
 
 // Watchers for basic info

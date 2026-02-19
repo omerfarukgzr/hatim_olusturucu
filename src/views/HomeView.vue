@@ -31,13 +31,22 @@
           Katılımcıları ekleyin, sayfaları otomatik dağıtın, Excel veya PDF olarak çıktı alıp grubunuzla paylaşın.
           Kayıt olmanıza gerek kalmadan hemen başlayabilirsiniz.
         </p>
-        <button class="btn btn-primary hero-btn" @click="openCreateModal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-          Hemen Başla
-        </button>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-primary hero-btn" @click="openCreateModal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Hemen Başla
+          </button>
+          <button class="btn btn-outline hero-btn" @click="$router.push('/takip')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            Hatim Takip Et
+          </button>
+        </div>
       </div>
     </div>
 

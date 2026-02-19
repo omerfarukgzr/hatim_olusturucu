@@ -15,6 +15,9 @@
       </div>
     </div>
     <div class="actions">
+      <button class="btn btn-primary" @click="$emit('copyLink')" title="Takip Linkini Kopyala">
+        🔗 Takip Linki
+      </button>
       <button class="btn btn-outline" @click="$emit('exportPdf')" title="PDF İndir">
         PDF İndir
       </button>
@@ -31,7 +34,7 @@ defineProps({
   used: Number,
   remaining: Number
 });
-defineEmits(['export', 'exportPdf']);
+defineEmits(['export', 'exportPdf', 'copyLink']);
 </script>
 
 <style scoped>

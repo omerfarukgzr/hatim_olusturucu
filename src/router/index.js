@@ -21,6 +21,16 @@ const routes = [
         name: 'detail',
         component: HatimDetailView
         // No requiresAuth here so shared links work
+    },
+    {
+        path: '/takip',
+        name: 'participant-login',
+        component: () => import('../views/ParticipantView.vue')
+    },
+    {
+        path: '/takip/:id',
+        name: 'participant-detail',
+        component: () => import('../views/ParticipantView.vue')
     }
 ];
 

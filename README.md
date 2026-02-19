@@ -47,8 +47,8 @@ Proje, sürdürülebilir ve ölçeklenebilir bir katmanlı mimariye (Layered Arc
 ### Yerel Çalıştırma
 1. Projeyi klonlayın:
 ```bash
-git clone https://github.com/omerfarukgzr/hatim_olu-turucu.git
-cd hatim_olu-turucu
+git clone https://github.com/omerfarukgzr/hatim_olusturucu.git
+cd hatim_olusturucu
 ```
 2. Bağımlılıkları yükleyin:
 ```bash

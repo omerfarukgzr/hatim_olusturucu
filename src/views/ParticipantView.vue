@@ -80,7 +80,7 @@
           </div>
           <div class="info-item">
             <span class="label">Tarih Aralığı</span>
-            <span class="value">{{ dates.length }} Gün ({{ dateUtils.formatToLocale(hatim.startDate) }} - {{ dateUtils.formatToLocale(hatim.endDate) }})</span>
+            <span class="value">{{ dates.length }} Gün ({{ dateUtils.formatToLocale(hatim.start_date) }} - {{ dateUtils.formatToLocale(hatim.end_date) }})</span>
           </div>
           <div class="info-item">
             <span class="label">Günlük</span>
@@ -139,7 +139,7 @@ import { exportService } from '../utils/exportUtils';
 
 const route = useRoute();
 const router = useRouter();
-const { loadHatim } = useHatim();
+const { loadHatim, updateHatim } = useHatim();
 const { show } = useToast();
 
 const hatim = ref(null);
@@ -154,29 +154,56 @@ const searchInput = ref(null);
 // Progress persistence
 function loadProgress() {
   if (!hatim.value || !selectedParticipant.value) return;
-  const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
-  const stored = localStorage.getItem(key);
-  if (stored) {
-    checkedDays.value = JSON.parse(stored);
+  
+  // Use progress from the participant object in DB if available, 
+  // otherwise fallback to localStorage for backward compatibility
+  if (selectedParticipant.value.checkedDays) {
+    checkedDays.value = [...selectedParticipant.value.checkedDays];
   } else {
-    checkedDays.value = [];
+    const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      checkedDays.value = JSON.parse(stored);
+      // Immediately try to sync this to DB
+      saveProgress();
+    } else {
+      checkedDays.value = [];
+    }
   }
 }
 
-function saveProgress() {
+async function saveProgress() {
   if (!hatim.value || !selectedParticipant.value) return;
-  const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
-  localStorage.setItem(key, JSON.stringify(checkedDays.value));
+  
+  // Update local state first
+  const participantIdx = hatim.value.participants.findIndex(p => p.id === selectedParticipant.value.id);
+  if (participantIdx !== -1) {
+    hatim.value.participants[participantIdx].checkedDays = [...checkedDays.value];
+    
+    // Save to DB
+    try {
+      await updateHatim(hatim.value.id, {
+        participants: hatim.value.participants
+      });
+      
+      // Also save to localStorage as a backup
+      const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
+      localStorage.setItem(key, JSON.stringify(checkedDays.value));
+    } catch (e) {
+      console.error('Progress could not be saved to DB', e);
+      show('İlerleme kaydedilemedi, internet bağlantınızı kontrol edin.', 'error');
+    }
+  }
 }
 
-function toggleDay(idx) {
+async function toggleDay(idx) {
   const index = checkedDays.value.indexOf(idx);
   if (index === -1) {
     checkedDays.value.push(idx);
   } else {
     checkedDays.value.splice(index, 1);
   }
-  saveProgress();
+  await saveProgress();
 }
 
 function isDayChecked(idx) {
@@ -320,7 +347,7 @@ function handleBackToParticipants() {
 
 const dates = computed(() => {
   if (!hatim.value) return [];
-  return dateUtils.getDatesInRange(hatim.value.startDate, hatim.value.endDate);
+  return dateUtils.getDatesInRange(hatim.value.start_date, hatim.value.end_date);
 });
 
 function getDayRange(dayIdx) {

@@ -13,9 +13,9 @@ if (pdfFonts && pdfFonts.pdfMake && pdfFonts.pdfMake.vfs) {
 export const exportService = {
     async excel(hatim) {
         if (!hatim.participants?.length) throw new Error('Önce katılımcı ekleyin.');
-        if (!hatim.startDate || !hatim.endDate) throw new Error('Lütfen tarih aralığı seçin.');
+        if (!hatim.start_date || !hatim.end_date) throw new Error('Lütfen tarih aralığı seçin.');
 
-        const dates = dateUtils.getDatesInRange(hatim.startDate, hatim.endDate);
+        const dates = dateUtils.getDatesInRange(hatim.start_date, hatim.end_date);
         if (dates.length === 0) throw new Error('Geçerli bir tarih aralığı seçin.');
 
         const workbook = new ExcelJS.Workbook();
@@ -66,7 +66,7 @@ export const exportService = {
 
     pdf(hatim) {
         if (!hatim.participants?.length) throw new Error('Önce katılımcı ekleyin.');
-        const dates = dateUtils.getDatesInRange(hatim.startDate, hatim.endDate);
+        const dates = dateUtils.getDatesInRange(hatim.start_date, hatim.end_date);
 
         const colNumWidth = 15;
         const colNameWidth = 90;
@@ -119,7 +119,7 @@ export const exportService = {
 
     personalPdf(hatim, participant, index) {
         if (!hatim || !participant) throw new Error('Veri eksik.');
-        const dates = dateUtils.getDatesInRange(hatim.startDate, hatim.endDate);
+        const dates = dateUtils.getDatesInRange(hatim.start_date, hatim.end_date);
 
         const body = [
             [

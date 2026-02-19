@@ -99,7 +99,7 @@
             <tr v-for="h in hatims" :key="h.id" class="cursor-pointer" @click="goToDetail(h.id)">
               <td class="td-name">{{ h.name }}</td>
               <td class="td-range">
-                <span v-if="h.startDate">{{ formatDate(h.startDate) }} - {{ formatDate(h.endDate) }}</span>
+                <span v-if="h.start_date">{{ formatDate(h.start_date) }} - {{ formatDate(h.end_date) }}</span>
                 <span v-else class="text-muted">-</span>
               </td>
               <td class="td-pages">

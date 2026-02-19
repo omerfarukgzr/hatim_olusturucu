@@ -57,22 +57,21 @@ export function useHatim() {
         const user = await authService.getCurrentUser();
 
         const newHatim = {
-            id: user ? undefined : `local-${Date.now()}`, // Temporary ID for local
             name: name || 'Yeni Hatim',
-            startDate: '',
-            endDate: '',
+            start_date: '',
+            end_date: '',
             participants: [],
-            created: new Date().toISOString(),
-            user_id: user ? user.id : 'guest'
+            user_id: user ? user.id : null
         };
 
         if (!user) {
             // Guest mode: save to local storage
+            const localHatim = { ...newHatim, id: `local-${Date.now()}`, created_at: new Date().toISOString() };
             const current = getLocalHatims();
-            current.unshift(newHatim);
+            current.unshift(localHatim);
             saveLocalHatims(current);
-            hatims.value.unshift(newHatim);
-            return newHatim.id;
+            hatims.value.unshift(localHatim);
+            return localHatim.id;
         }
 
         try {
@@ -145,6 +144,19 @@ export function useHatim() {
         return { total, remaining, percentage };
     }
 
+    function calculateReadingProgress(participants) {
+        if (!participants || participants.length === 0) return 0;
+
+        let totalRead = 0;
+        participants.forEach(p => {
+            const checkedCount = p.checkedDays ? p.checkedDays.length : 0;
+            totalRead += checkedCount * (parseInt(p.pages) || 0);
+        });
+
+        const progress = (totalRead / MAX_PAGES) * 100;
+        return Math.min(progress, 100);
+    }
+
 
 
     return {
@@ -155,6 +167,7 @@ export function useHatim() {
         updateHatim,
         deleteHatim,
         calculateStats,
+        calculateReadingProgress,
         getPersonStartPage: hatimUtils.getPersonStartPage,
         exportExcel: exportService.excel,
         exportPdf: exportService.pdf,

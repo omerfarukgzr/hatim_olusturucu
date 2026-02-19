@@ -6,7 +6,7 @@ export const hatimService = {
             .from('hatims')
             .select('*')
             .eq('user_id', userId)
-            .order('created', { ascending: false });
+            .order('created_at', { ascending: false });
 
         if (error) throw error;
         return data;

@@ -37,14 +37,13 @@ export function useHatim() {
     }
 
     async function loadHatim(id) {
-        const user = await authService.getCurrentUser();
+        // For local hatims, load from local storage
+        if (String(id).startsWith('local-')) {
+            const localData = getLocalHatims();
+            return localData.find(h => h.id === id) || null;
+        }
 
-        // Try to find in local storage first (for guest created hatims)
-        const localData = getLocalHatims();
-        const localHatim = localData.find(h => h.id === id);
-        if (localHatim) return localHatim;
-
-        // If not local, try fetching from service (e.g., shared link)
+        // For Supabase hatims, always fetch from DB to get the latest progress
         try {
             return await hatimService.getById(id);
         } catch (e) {
@@ -80,7 +79,7 @@ export function useHatim() {
             return data.id;
         } catch (e) {
             console.error('Hatim oluşturulamadı', e);
-            return null;
+            throw e;
         }
     }
 
@@ -93,8 +92,8 @@ export function useHatim() {
             hatims.value[idx] = { ...hatims.value[idx], ...updates };
         }
 
-        if (!user || String(id).startsWith('local-')) {
-            // Guest mode or local hatim: update in local storage
+        if (String(id).startsWith('local-')) {
+            // Local hatim: update in local storage
             const current = getLocalHatims();
             const localIdx = current.findIndex(h => h.id === id);
             if (localIdx !== -1) {
@@ -108,6 +107,7 @@ export function useHatim() {
             await hatimService.update(id, updates);
         } catch (e) {
             console.error('Hatim güncellenemedi', e);
+            throw e;
         }
     }
 

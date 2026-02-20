@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.97.0",
     "exceljs": "^4.4.0",
+    "lucide-vue-next": "^0.575.0",
     "pdfmake": "^0.3.4",
     "vue": "^3.5.25",
     "vue-router": "^4.6.4"

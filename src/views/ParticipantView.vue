@@ -155,20 +155,11 @@ const searchInput = ref(null);
 function loadProgress() {
   if (!hatim.value || !selectedParticipant.value) return;
   
-  // Use progress from the participant object in DB if available, 
-  // otherwise fallback to localStorage for backward compatibility
+  // Use progress from the participant object (fetched from DB or central local store)
   if (selectedParticipant.value.checkedDays) {
     checkedDays.value = [...selectedParticipant.value.checkedDays];
   } else {
-    const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
-    const stored = localStorage.getItem(key);
-    if (stored) {
-      checkedDays.value = JSON.parse(stored);
-      // Immediately try to sync this to DB
-      saveProgress();
-    } else {
-      checkedDays.value = [];
-    }
+    checkedDays.value = [];
   }
 }
 
@@ -180,18 +171,15 @@ async function saveProgress() {
   if (participantIdx !== -1) {
     hatim.value.participants[participantIdx].checkedDays = [...checkedDays.value];
     
-    // Save to DB
+    // Save via central service (handles Supabase vs Local automatically)
     try {
       await updateHatim(hatim.value.id, {
         participants: hatim.value.participants
       });
-      
-      // Also save to localStorage as a backup
-      const key = `progress-${hatim.value.id}-${selectedParticipant.value.id}`;
-      localStorage.setItem(key, JSON.stringify(checkedDays.value));
+      show('İlerleme kaydedildi', 'success');
     } catch (e) {
-      console.error('Progress could not be saved to DB', e);
-      show('İlerleme kaydedilemedi, internet bağlantınızı kontrol edin.', 'error');
+      console.error('Progress could not be saved', e);
+      show('İlerleme veritabanına kaydedilemedi. Lütfen internetinizi veya erişim yetkinizi kontrol edin.', 'error');
     }
   }
 }

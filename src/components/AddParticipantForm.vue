@@ -53,8 +53,14 @@
       </div>
     </div>
     
-    <div class="progress-wrap">
-      <div :class="progressBarClass" :style="{ width: percentage + '%' }"></div>
+    <div class="distribution-progress">
+      <div class="progress-header">
+        <span class="progress-label">Hatim Dağıtım Oranı</span>
+        <span class="progress-percentage">%{{ percentage.toFixed(1) }}</span>
+      </div>
+      <div class="progress-wrap">
+        <div :class="progressBarClass" :style="{ width: percentage + '%' }"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -270,6 +276,43 @@ async function downloadTemplate() {
 
 .progress-bar.warning { background: var(--yellow); }
 .progress-bar.danger { background: var(--red); }
+
+.distribution-progress {
+  margin-top: 24px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.progress-percentage {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.progress-wrap {
+  height: 8px;
+  background: var(--bg-alt);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
 
 @media (max-width: 700px) {
   .add-form { flex-direction: column; align-items: stretch; }

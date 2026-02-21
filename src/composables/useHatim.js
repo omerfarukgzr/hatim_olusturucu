@@ -52,13 +52,13 @@ export function useHatim() {
         }
     }
 
-    async function createHatim(name) {
+    async function createHatim(name, startDate = '', endDate = '') {
         const user = await authService.getCurrentUser();
 
         const newHatim = {
             name: name || 'Yeni Hatim',
-            start_date: '',
-            end_date: '',
+            start_date: startDate || '',
+            end_date: endDate || '',
             participants: [],
             user_id: user ? user.id : null
         };
@@ -165,7 +165,7 @@ export function useHatim() {
             const pages = parseInt(p.pages) || 0;
             const checkedCount = p.checkedDays ? p.checkedDays.length : 0;
             totalRead += checkedCount * pages;
-            
+
             // If dates are set, calculate total assigned pages for the period
             // Otherwise, fallback to 600 as a reference for a single hatim
             if (totalDays > 0) {

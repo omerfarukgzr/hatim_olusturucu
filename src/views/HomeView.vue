@@ -134,8 +134,27 @@
         v-model="newHatimName" 
         class="field-input" 
         placeholder="Örn: Ramazan Hatmi 2025" 
-        @keydown.enter="createConfirm" 
       />
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+      <div class="field-group">
+        <label class="field-label">Başlangıç Tarihi</label>
+        <input 
+          v-model="startDate" 
+          type="date"
+          class="field-input" 
+        />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Bitiş Tarihi</label>
+        <input 
+          v-model="endDate" 
+          type="date"
+          class="field-input" 
+          @keydown.enter="createConfirm" 
+        />
+      </div>
     </div>
   </BaseModal>
 
@@ -171,6 +190,8 @@ onMounted(() => {
 // Create Modal State
 const createModalOpen = ref(false);
 const newHatimName = ref('');
+const startDate = ref('');
+const endDate = ref('');
 const createInput = ref(null);
 
 // Delete Modal State
@@ -179,6 +200,8 @@ const deleteId = ref(null);
 
 function openCreateModal() {
   newHatimName.value = '';
+  startDate.value = '';
+  endDate.value = '';
   createModalOpen.value = true;
   nextTick(() => {
     if (createInput.value) createInput.value.focus();
@@ -187,7 +210,7 @@ function openCreateModal() {
 
 async function createConfirm() {
   const name = newHatimName.value.trim() || 'Yeni Hatim';
-  const id = await createHatim(name);
+  const id = await createHatim(name, startDate.value, endDate.value);
   if (id) {
     createModalOpen.value = false;
     router.push(`/hatim/${id}`);

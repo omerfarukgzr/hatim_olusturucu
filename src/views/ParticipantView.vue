@@ -93,6 +93,12 @@
             </div>
             <span class="value">{{ progressPercentage }}%</span>
           </div>
+          <div class="info-item delay" v-if="delayStats.days > 0">
+            <span class="label">Takip Durumu</span>
+            <span class="value highlight-warning">
+               {{ delayStats.days }} Gün Geride ({{ delayStats.pages }} sayfa)
+            </span>
+          </div>
         </div>
 
         <div class="days-list">
@@ -100,7 +106,10 @@
             v-for="(date, idx) in dates" 
             :key="idx" 
             class="day-row"
-            :class="{ 'is-checked': isDayChecked(idx) }"
+            :class="{ 
+              'is-checked': isDayChecked(idx),
+              'is-delayed': isDayDelayed(idx)
+            }"
             @click="toggleDay(idx)"
           >
             <div class="day-check">
@@ -202,6 +211,38 @@ const progressPercentage = computed(() => {
   if (dates.value.length === 0) return 0;
   return Math.round((checkedDays.value.length / dates.value.length) * 100);
 });
+
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const delayStats = computed(() => {
+  if (!hatim.value || !selectedParticipant.value || !dates.value.length) {
+    return { days: 0, pages: 0 };
+  }
+  
+  let daysBehind = 0;
+  dates.value.forEach((date, idx) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    
+    // Geçmiş günler ve bugün (eğer işaretlenmemişse)
+    if (d < today && !isDayChecked(idx)) {
+      daysBehind++;
+    }
+  });
+  
+  return {
+    days: daysBehind,
+    pages: daysBehind * (selectedParticipant.value.pages || 0)
+  };
+});
+
+function isDayDelayed(idx) {
+  if (!dates.value[idx]) return false;
+  const d = new Date(dates.value[idx]);
+  d.setHours(0, 0, 0, 0);
+  return d < today && !isDayChecked(idx);
+}
 
 const filteredParticipants = computed(() => {
   if (!hatim.value) return [];
@@ -829,5 +870,20 @@ function handleExportPdf() {
     width: 100%;
     justify-content: center;
   }
+}
+
+.day-row.is-delayed {
+  background: rgba(212, 163, 115, 0.05); /* Çok hafif sarımsı arka plan */
+}
+
+.highlight-warning {
+  color: var(--yellow) !important;
+}
+
+.info-item.delay {
+  grid-column: span 2;
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(212, 163, 115, 0.2);
 }
 </style>

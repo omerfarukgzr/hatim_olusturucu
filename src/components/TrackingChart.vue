@@ -221,12 +221,22 @@ const elapsedDays = computed(() => {
   return Math.min(idx + 1, totalDays.value || idx + 1);
 });
 
-// Genel ortalama tamamlanma oranı
+// Genel tamamlanma — üstteki progress bar ile aynı ağırlıklı formül:
+// toplam okunan sayfa / (totalDays × toplam atanan sayfa/gün) × 100
 const overallProgress = computed(() => {
   if (!props.participants.length || totalDays.value === 0) return 0;
-  const sum = props.participants.reduce((acc, p) => acc + getProgress(p), 0);
-  return Math.round(sum / props.participants.length);
+  let totalRead = 0;
+  let totalToRead = 0;
+  props.participants.forEach(p => {
+    const pages = parseInt(p.pages) || 0;
+    const checked = p.checkedDays ? p.checkedDays.length : 0;
+    totalRead  += checked * pages;
+    totalToRead += totalDays.value * pages;
+  });
+  if (totalToRead === 0) return 0;
+  return Math.min(Math.round((totalRead / totalToRead) * 100), 100);
 });
+
 
 // Toplam okunan sayfa sayısı
 const totalPagesRead = computed(() => {
